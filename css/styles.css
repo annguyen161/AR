@@ -433,7 +433,7 @@ select {
 /* Text Banner */
 .text-banner {
   position: absolute;
-  top: 40px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(-30px);
   z-index: 15;
@@ -500,6 +500,19 @@ select {
 
 .text-banner.show .banner-text {
   animation: bannerFloat 4s ease-in-out infinite;
+}
+
+/* Responsive adjustments for text banner */
+@media (max-width: 768px) {
+  .text-banner {
+    top: 40px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-banner {
+    top: 30px;
+  }
 }
 
 model-viewer {
