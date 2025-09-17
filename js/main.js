@@ -73,7 +73,8 @@ mv.addEventListener("load", () => {
   } else {
     console.log("Không tìm thấy animation trong mô hình.");
   }
-
+  btnGroup.classList.add("show");
+  visitBtn.style.display = "none";
   btnGroup.classList.add("show");
 });
 
