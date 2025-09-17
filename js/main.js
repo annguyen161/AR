@@ -8,6 +8,12 @@ const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
 
+setTimeout(() => {
+  if (textBanner) {
+    textBanner.classList.add("show");
+  }
+}, 1000);
+
 // Nút kích hoạt AR
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
