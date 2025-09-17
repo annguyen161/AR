@@ -7,6 +7,7 @@ const visitBtn = document.getElementById("visitBtn");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
+let animStarted = false;
 
 setTimeout(() => {
   if (textBanner) {
@@ -48,9 +49,11 @@ mv.addEventListener("ar-status", (event) => {
     bgm.currentTime = 0;
     mv.cameraOrbit = "45deg 90deg 2m";
 
-    // ✅ Luôn hiện nút Ghé Thăm khi thoát AR
-    visitBtn.style.display = "flex";
-    visitBtn.classList.add("show");
+    // ✅ Nếu chưa bấm Play Anim mà thoát AR → hiện nút Ghé Thăm luôn
+    if (!animStarted) {
+      visitBtn.style.display = "flex";
+      visitBtn.classList.add("show");
+    }
   }
 });
 
@@ -74,14 +77,15 @@ mv.addEventListener("load", () => {
   btnGroup.classList.add("show");
 });
 
-// Nút chạy animation bằng icon
+// Nút chạy animation
 playAnimBtn.addEventListener("click", () => {
   if (!firstAnim) {
     alert("Model chưa có animation!");
     return;
   }
 
-  visitBtn.style.display = "none"; // ẩn đi nếu có trước đó
+  animStarted = true; // ✅ đánh dấu đã bấm play anim
+  visitBtn.style.display = "none";
   visitBtn.classList.remove("show");
 
   mv.animationName = firstAnim;
@@ -89,14 +93,12 @@ playAnimBtn.addEventListener("click", () => {
   mv.currentTime = 0;
   mv.play();
 
-  // Theo dõi và dừng khi hết
   const lockAtEnd = () => {
     const duration = mv.duration;
     const currentTime = mv.currentTime;
 
     if (duration && currentTime >= duration - 0.1) {
       mv.pause();
-      // ✅ hiện nút "Ghé Thăm"
       visitBtn.style.display = "flex";
       visitBtn.classList.add("show");
     } else {
