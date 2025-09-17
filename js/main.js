@@ -5,29 +5,11 @@ const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
 const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-const isAndroid = /Android/i.test(navigator.userAgent);
-
-// Cấu hình AR cho Android để cố định mô hình
-if (isAndroid) {
-  mv.addEventListener("ar-status", (event) => {
-    if (event.detail.status === "session-started") {
-      // Đảm bảo mô hình được cố định trong không gian AR
-      mv.arScale = "fixed";
-      mv.arPlacement = "floor";
-      console.log("AR session started - Model fixed in space");
-    }
-  });
-}
 
 // Nút kích hoạt AR
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
   try {
-    // Cấu hình AR trước khi kích hoạt
-    if (isAndroid) {
-      mv.arScale = "fixed";
-      mv.arPlacement = "floor";
-    }
     await mv.activateAR();
   } catch (err) {
     console.log("Kích hoạt AR thất bại:", err);
@@ -56,6 +38,8 @@ mv.addEventListener("ar-status", (event) => {
   } else if (event.detail.status === "not-presenting") {
     bgm.pause();
     bgm.currentTime = 0;
+    mv.resetTurntableRotation();
+    mv.cameraOrbit = "45deg 90deg 2m";
   }
 });
 
@@ -89,7 +73,6 @@ mv.addEventListener("load", () => {
   }
 
   btnGroup.classList.add("show");
-  textBanner.classList.add("show");
   setTimeout(() => {
     visitBtn.style.display = "flex";
     visitBtn.classList.add("show");
