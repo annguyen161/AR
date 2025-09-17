@@ -1,10 +1,12 @@
 const mv = document.getElementById("mv");
 const customAR = document.getElementById("customAR");
+const playAnimBtn = document.getElementById("playAnim");
 const bgm = document.getElementById("bgm");
 const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
-const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+let firstAnim = null;
 
 // Nút kích hoạt AR
 customAR.addEventListener("click", async (event) => {
@@ -38,7 +40,6 @@ mv.addEventListener("ar-status", (event) => {
   } else if (event.detail.status === "not-presenting") {
     bgm.pause();
     bgm.currentTime = 0;
-    mv.resetTurntableRotation();
     mv.cameraOrbit = "45deg 90deg 2m";
   }
 });
@@ -52,29 +53,37 @@ mv.addEventListener("load", () => {
   const animations = mv.availableAnimations;
 
   if (animations && animations.length > 0) {
-    mv.animationName = animations[0];
+    firstAnim = animations[0];
+    mv.animationName = firstAnim;
     mv.animationLoop = false;
-    mv.play();
-
-    const lockAtEnd = () => {
-      const duration = mv.duration;
-      const currentTime = mv.currentTime;
-
-      if (duration && currentTime >= duration - 0.1) {
-        mv.timeScale = 0.0;
-      } else {
-        requestAnimationFrame(lockAtEnd);
-      }
-    };
-
-    requestAnimationFrame(lockAtEnd);
+    mv.pause(); // không chạy ngay
   } else {
     console.log("Không tìm thấy animation trong mô hình.");
   }
 
   btnGroup.classList.add("show");
-  setTimeout(() => {
-    visitBtn.style.display = "flex";
-    visitBtn.classList.add("show");
-  }, 10000);
+});
+playAnimBtn.addEventListener("click", () => {
+  if (!firstAnim) {
+    alert("Model chưa có animation!");
+    return;
+  }
+
+  mv.animationName = firstAnim;
+  mv.animationLoop = false;
+  mv.currentTime = 0;
+  mv.play();
+  const lockAtEnd = () => {
+    const duration = mv.duration;
+    const currentTime = mv.currentTime;
+
+    if (duration && currentTime >= duration - 0.1) {
+      mv.pause();
+      visitBtn.style.display = "flex";
+      visitBtn.classList.add("show");
+    } else {
+      requestAnimationFrame(lockAtEnd);
+    }
+  };
+  requestAnimationFrame(lockAtEnd);
 });
