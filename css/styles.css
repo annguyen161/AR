@@ -435,16 +435,18 @@ select {
   position: absolute;
   top: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-30px);
   z-index: 15;
   width: 90%;
   max-width: 600px;
   opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 1.2s ease,
+    transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .text-banner.show {
   opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .banner-text {
@@ -453,7 +455,7 @@ select {
   padding: 16px 24px;
   text-align: center;
   color: #fff;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
   font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
     Roboto, Arial, sans-serif;
@@ -461,6 +463,43 @@ select {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   line-height: 1.4;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.8s ease;
+}
+
+.text-banner.show .banner-text::before {
+  left: 100%;
+}
+
+/* Floating animation for banner */
+@keyframes bannerFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.text-banner.show .banner-text {
+  animation: bannerFloat 4s ease-in-out infinite;
 }
 
 model-viewer {
@@ -476,18 +515,18 @@ model-viewer {
   position: absolute;
   bottom: 30px;
   left: 50%;
-  transform: translateX(-50%) translateY(30px);
+  transform: translateX(-50%) translateY(50px) scale(0.8);
   display: flex;
   gap: 16px;
   z-index: 10;
   opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .button-group.show {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .button-group button {
@@ -504,9 +543,32 @@ model-viewer {
   justify-content: center;
   gap: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, filter 0.25s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.3s ease, box-shadow 0.3s ease;
   will-change: transform, filter, box-shadow;
   backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-group button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.button-group button:hover::before {
+  left: 100%;
 }
 
 .button-group button:hover {
@@ -540,4 +602,22 @@ model-viewer {
 .btn-icon {
   font-size: 20px;
   transform: translateY(1px);
+  transition: transform 0.3s ease;
+}
+
+.button-group button:hover .btn-icon {
+  transform: translateY(1px) scale(1.1);
+}
+
+/* Special animation for visit button when it appears */
+#visitBtn {
+  transform: translateX(20px) scale(0.8);
+  opacity: 0;
+  transition: opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#visitBtn.show {
+  opacity: 1;
+  transform: translateX(0) scale(1);
 }
