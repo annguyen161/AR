@@ -7,6 +7,7 @@ const visitBtn = document.getElementById("visitBtn");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
+let animPlayed = false;
 
 setTimeout(() => {
   if (textBanner) {
@@ -47,6 +48,12 @@ mv.addEventListener("ar-status", (event) => {
     bgm.pause();
     bgm.currentTime = 0;
     mv.cameraOrbit = "45deg 90deg 2m";
+
+    // ✅ Nếu đã bấm nút playAnim thì khi thoát AR hiện nút Ghé Thăm
+    if (animPlayed) {
+      visitBtn.style.display = "flex";
+      visitBtn.classList.add("show");
+    }
   }
 });
 
@@ -69,11 +76,17 @@ mv.addEventListener("load", () => {
 
   btnGroup.classList.add("show");
 });
+
+// Nút chạy animation bằng icon
 playAnimBtn.addEventListener("click", () => {
   if (!firstAnim) {
     alert("Model chưa có animation!");
     return;
   }
+
+  animPlayed = true;
+  visitBtn.style.display = "none";
+  visitBtn.classList.remove("show");
 
   mv.animationName = firstAnim;
   mv.animationLoop = false;
