@@ -260,6 +260,101 @@ select {
   right: 25%;
 }
 
+/* Hearts */
+.heart-large {
+  top: 20%;
+  right: 8%;
+  animation: floatAround 16s ease-in-out infinite,
+    twinkle 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 182, 193, 0.8));
+}
+
+.heart-medium {
+  top: 40%;
+  left: 5%;
+  animation: floatAround 18s ease-in-out infinite reverse,
+    twinkle 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 192, 203, 0.7));
+}
+
+.heart-small {
+  top: 60%;
+  right: 15%;
+  animation: floatAround 14s ease-in-out infinite,
+    twinkle 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 182, 193, 0.6));
+}
+
+.heart-tiny {
+  top: 80%;
+  left: 20%;
+  animation: floatAround 20s ease-in-out infinite reverse,
+    twinkle 3.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 192, 203, 0.5));
+}
+
+/* Circles */
+.circle-large {
+  top: 12%;
+  left: 25%;
+  animation: floatAround 17s ease-in-out infinite,
+    twinkle 4.2s ease-in-out infinite;
+}
+
+.circle-medium {
+  top: 35%;
+  right: 5%;
+  animation: floatAround 19s ease-in-out infinite reverse,
+    twinkle 3.2s ease-in-out infinite;
+}
+
+.circle-small {
+  top: 55%;
+  left: 8%;
+  animation: floatAround 15s ease-in-out infinite,
+    twinkle 2.9s ease-in-out infinite;
+}
+
+.circle-tiny {
+  top: 75%;
+  right: 20%;
+  animation: floatAround 21s ease-in-out infinite reverse,
+    twinkle 4.1s ease-in-out infinite;
+}
+
+.circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 182, 193, 0.6) 50%,
+    rgba(255, 192, 203, 0.3) 100%
+  );
+  box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+}
+
+.circle-large .circle {
+  width: 45px;
+  height: 45px;
+}
+
+.circle-medium .circle {
+  width: 35px;
+  height: 35px;
+}
+
+.circle-small .circle {
+  width: 25px;
+  height: 25px;
+}
+
+.circle-tiny .circle {
+  width: 18px;
+  height: 18px;
+}
+
 /* Moon */
 .moon {
   top: 10%;
@@ -378,6 +473,40 @@ select {
   transform: scale(1.2);
   opacity: 1;
   filter: brightness(1.5) drop-shadow(0 0 12px rgba(255, 255, 255, 1));
+}
+
+/* Special effects for hearts */
+.heart-large:hover,
+.heart-medium:hover,
+.heart-small:hover,
+.heart-tiny:hover {
+  animation-play-state: paused;
+  transform: scale(1.3);
+  opacity: 1;
+  filter: brightness(1.4) drop-shadow(0 0 15px rgba(255, 182, 193, 1));
+}
+
+/* Special effects for circles */
+.circle-large:hover,
+.circle-medium:hover,
+.circle-small:hover,
+.circle-tiny:hover {
+  animation-play-state: paused;
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+.circle-large:hover .circle,
+.circle-medium:hover .circle,
+.circle-small:hover .circle,
+.circle-tiny:hover .circle {
+  box-shadow: 0 0 25px rgba(255, 182, 193, 0.8);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 182, 193, 0.8) 50%,
+    rgba(255, 192, 203, 0.6) 100%
+  );
 }
 
 /* Enhanced star glow effects */
