@@ -4,8 +4,34 @@ body {
   height: 100%;
   background: #0b0c10;
   color: #fff;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+    Roboto, Arial, sans-serif;
   overflow: hidden;
+}
+
+/* Apply Playpen Sans font to all text elements */
+* {
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+    Roboto, Arial, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+button,
+a,
+label,
+input,
+textarea,
+select {
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+    Roboto, Arial, sans-serif;
 }
 
 /* Animated Background Styles from ar-mhd */
@@ -461,13 +487,21 @@ model-viewer {
 }
 
 .ar-btn {
-  background: linear-gradient(135deg, #ffd700, #ff8c00);
+  background: linear-gradient(135deg, #ffcace, #ffeeb0);
   color: #1a1a1a;
 }
 
+.ar-btn:hover {
+  background: linear-gradient(135deg, #ffaeb4, #ffe99a);
+}
+
 .link-btn {
-  background: linear-gradient(135deg, #ff3b3b, #d81b60);
-  color: #fff;
+  background: linear-gradient(135deg, #ffcace, #ffeeb0);
+  color: #1a1a1a;
+}
+
+.link-btn:hover {
+  background: linear-gradient(135deg, #ffaeb4, #ffe99a);
 }
 
 .btn-icon {
