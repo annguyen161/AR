@@ -14,7 +14,15 @@ if (isAndroid) {
       // Đảm bảo mô hình được cố định trong không gian AR
       mv.arScale = "fixed";
       mv.arPlacement = "floor";
-      console.log("AR session started - Model fixed in space");
+
+      // Đặt mô hình xuống sàn thay vì bay lên trời
+      setTimeout(() => {
+        if (mv.model) {
+          mv.model.position.set(0, 0, 0);
+        }
+      }, 1000);
+
+      console.log("AR session started - Model fixed on floor");
     }
   });
 }
@@ -27,6 +35,16 @@ customAR.addEventListener("click", async (event) => {
     if (isAndroid) {
       mv.arScale = "fixed";
       mv.arPlacement = "floor";
+
+      // Đảm bảo mô hình được đặt đúng vị trí
+      mv.addEventListener("model-visibility", () => {
+        setTimeout(() => {
+          if (mv.model) {
+            mv.model.position.set(0, 0, 0);
+            mv.model.rotation.set(0, 0, 0);
+          }
+        }, 500);
+      });
     }
     await mv.activateAR();
   } catch (err) {
