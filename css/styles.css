@@ -677,6 +677,7 @@ model-viewer {
   padding: 14px 20px;
   border: none;
   border-radius: 16px;
+  font-family: "Nunito", "Arial", sans-serif !important;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
@@ -727,6 +728,8 @@ model-viewer {
   background: linear-gradient(135deg, #ff8a95, #ffb74d);
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", "Arial", sans-serif !important;
+  font-weight: 600 !important;
 }
 
 .ar-btn:hover {
@@ -738,6 +741,8 @@ model-viewer {
   background: linear-gradient(135deg, #e1bee7, #ffab91);
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", "Arial", sans-serif !important;
+  font-weight: 600 !important;
 }
 
 .link-btn:hover {
@@ -746,9 +751,11 @@ model-viewer {
 }
 
 .btn-icon {
-  font-size: 20px;
+  font-size: 16px;
   transform: translateY(1px);
   transition: transform 0.3s ease;
+  font-family: "Nunito", "Arial", sans-serif !important;
+  font-weight: 600 !important;
 }
 
 .button-group button:hover .btn-icon {
