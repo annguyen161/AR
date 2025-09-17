@@ -3,6 +3,7 @@ const customAR = document.getElementById("customAR");
 const bgm = document.getElementById("bgm");
 const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
+const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 // Nút kích hoạt AR
@@ -70,6 +71,7 @@ mv.addEventListener("load", () => {
   }
 
   btnGroup.classList.add("show");
+  textBanner.classList.add("show");
   setTimeout(() => {
     visitBtn.style.display = "flex";
     visitBtn.classList.add("show");
