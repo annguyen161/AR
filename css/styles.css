@@ -653,18 +653,6 @@ model-viewer {
   position: relative;
 }
 
-/* Đảm bảo mô hình AR được đặt đúng vị trí trên Android */
-model-viewer[ar] {
-  --ar-prompt: none;
-}
-
-/* Cấu hình AR cho Android */
-@media screen and (max-width: 768px) {
-  model-viewer[ar] {
-    --ar-button-display: none;
-  }
-}
-
 .button-group {
   position: absolute;
   bottom: 30px;
