@@ -6,6 +6,13 @@ const visitBtn = document.getElementById("visitBtn");
 const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+// Hiển thị text banner sau 1 giây
+setTimeout(() => {
+  if (textBanner) {
+    textBanner.classList.add("show");
+  }
+}, 1000);
+
 // Nút kích hoạt AR
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
@@ -71,6 +78,9 @@ mv.addEventListener("load", () => {
   } else {
     console.log("Không tìm thấy animation trong mô hình.");
   }
+
+  // Hiển thị text banner
+  textBanner.classList.add("show");
 
   btnGroup.classList.add("show");
   setTimeout(() => {
