@@ -16,12 +16,14 @@ let firstAnim = null;
 let arActivated = false; // Cờ để theo dõi xem AR đã được kích hoạt chưa
 let isPaused = true; // Cờ để theo dõi trạng thái tạm dừng của animation
 
-// Khởi tạo các phần tử giao diện mới
-pauseResumeBtn.textContent = "Tạm dừng Animation";
+// Khởi tạo các phần tử giao diện mới với icon
+pauseResumeBtn.innerHTML = '<i class="fas fa-play" title="Phát Animation"></i>';
 pauseResumeBtn.style.display = "none";
-restartAnimBtn.textContent = "Khởi động lại Animation";
+restartAnimBtn.innerHTML =
+  '<i class="fas fa-redo" title="Khởi động lại Animation"></i>';
 restartAnimBtn.style.display = "none";
-resetCameraBtn.textContent = "Đặt lại góc nhìn";
+resetCameraBtn.innerHTML =
+  '<i class="fas fa-undo" title="Đặt lại góc nhìn"></i>';
 resetCameraBtn.style.display = "none";
 loadingSpinner.textContent = "Đang tải mô hình...";
 loadingSpinner.style.cssText =
@@ -30,6 +32,11 @@ btnGroup.appendChild(pauseResumeBtn);
 btnGroup.appendChild(restartAnimBtn);
 btnGroup.appendChild(resetCameraBtn);
 document.body.appendChild(loadingSpinner);
+
+// Cập nhật các nút hiện có để sử dụng icon
+playAnimBtn.innerHTML = '<i class="fas fa-play" title="Phát Animation"></i>';
+customAR.innerHTML = '<i class="fas fa-cube" title="Xem AR"></i>';
+visitBtn.innerHTML = '<i class="fas fa-external-link-alt" title="Visit"></i>';
 
 // Hiển thị banner văn bản sau 1 giây
 setTimeout(() => {
@@ -156,7 +163,8 @@ playAnimBtn.addEventListener("click", () => {
   mv.currentTime = 0;
   mv.play();
   isPaused = false;
-  pauseResumeBtn.textContent = "Tạm dừng Animation";
+  pauseResumeBtn.innerHTML =
+    '<i class="fas fa-pause" title="Tạm dừng Animation"></i>';
 
   const lockAtEnd = () => {
     const duration = mv.duration;
@@ -165,7 +173,8 @@ playAnimBtn.addEventListener("click", () => {
     if (duration && currentTime >= duration - 0.1) {
       mv.pause();
       isPaused = true;
-      pauseResumeBtn.textContent = "Tiếp tục Animation";
+      pauseResumeBtn.innerHTML =
+        '<i class="fas fa-play" title="Tiếp tục Animation"></i>';
       showVisitButton();
     } else {
       requestAnimationFrame(lockAtEnd);
@@ -180,11 +189,13 @@ pauseResumeBtn.addEventListener("click", () => {
   if (isPaused) {
     mv.play();
     isPaused = false;
-    pauseResumeBtn.textContent = "Tạm dừng Animation";
+    pauseResumeBtn.innerHTML =
+      '<i class="fas fa-pause" title="Tạm dừng Animation"></i>';
   } else {
     mv.pause();
     isPaused = true;
-    pauseResumeBtn.textContent = "Tiếp tục Animation";
+    pauseResumeBtn.innerHTML =
+      '<i class="fas fa-play" title="Tiếp tục Animation"></i>';
   }
 });
 
@@ -194,7 +205,8 @@ restartAnimBtn.addEventListener("click", () => {
   mv.currentTime = 0;
   mv.play();
   isPaused = false;
-  pauseResumeBtn.textContent = "Tạm dừng Animation";
+  pauseResumeBtn.innerHTML =
+    '<i class="fas fa-pause" title="Tạm dừng Animation"></i>';
 });
 
 // Đặt lại góc nhìn camera
