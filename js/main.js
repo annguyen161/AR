@@ -8,13 +8,14 @@ const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
 
+// Show text banner after 1 second
 setTimeout(() => {
   if (textBanner) {
     textBanner.classList.add("show");
   }
 }, 1000);
 
-// Nút kích hoạt AR
+// Activate AR on customAR button click
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
   try {
@@ -31,7 +32,7 @@ customAR.addEventListener("click", async (event) => {
   }
 });
 
-// Xử lý âm thanh khi thoát AR hoặc ẩn trang
+// Handle audio on page visibility change
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
     bgm.pause();
@@ -39,6 +40,7 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+// Handle AR status changes
 mv.addEventListener("ar-status", (event) => {
   if (event.detail.status === "session-started") {
     bgm.currentTime = 0;
@@ -48,6 +50,7 @@ mv.addEventListener("ar-status", (event) => {
     bgm.currentTime = 0;
     mv.cameraOrbit = "45deg 90deg 2m";
 
+    // Show visit button regardless of animation state
     if (!visitBtn.classList.contains("show")) {
       visitBtn.style.display = "flex";
       visitBtn.classList.add("show");
@@ -55,11 +58,13 @@ mv.addEventListener("ar-status", (event) => {
   }
 });
 
+// Pause audio on page hide
 window.addEventListener("pagehide", () => {
   bgm.pause();
   bgm.currentTime = 0;
 });
 
+// Load model and initialize animations
 mv.addEventListener("load", () => {
   const animations = mv.availableAnimations;
 
@@ -67,13 +72,18 @@ mv.addEventListener("load", () => {
     firstAnim = animations[0];
     mv.animationName = firstAnim;
     mv.animationLoop = false;
-    mv.pause(); // không chạy ngay
+    mv.pause(); // Do not play animation immediately
   } else {
     console.log("Không tìm thấy animation trong mô hình.");
+    // Show visit button if no animations are available
+    visitBtn.style.display = "flex";
+    visitBtn.classList.add("show");
   }
 
   btnGroup.classList.add("show");
 });
+
+// Play animation on playAnimBtn click
 playAnimBtn.addEventListener("click", () => {
   if (!firstAnim) {
     alert("Model chưa có animation!");
