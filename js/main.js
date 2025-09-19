@@ -126,6 +126,16 @@ function showARNotSupportedMessage() {
   document.body.appendChild(modal);
 }
 
+// Function to update banner text after countdown
+function updateBannerText() {
+  const bannerText = document.querySelector(".banner-text");
+  if (bannerText) {
+    bannerText.innerHTML = `
+      Mẹ khám phá TRỌN VẸN 9 THÁNG trưởng thành của con tại "đổi quà" nhé
+    `;
+  }
+}
+
 setTimeout(() => {
   if (typeof textBanner !== "undefined" && textBanner) {
     textBanner.classList.add("show");
@@ -154,6 +164,8 @@ function startCountdown() {
       visitBtn.style.opacity = "1";
       visitBtn.style.cursor = "pointer";
       btnText.textContent = originalText;
+      // Update banner text after countdown completes
+      updateBannerText();
     }
   }, 1000);
 }
