@@ -673,8 +673,8 @@ model-viewer {
 
 .button-group button {
   flex: 1;
-  width: 160px;
-  padding: 14px 20px;
+  width: 180px;
+  padding: 14px 16px;
   border: none;
   border-radius: 16px;
   font-family: "Nunito", "Arial", sans-serif !important;
@@ -773,6 +773,18 @@ model-viewer {
 #visitBtn.show {
   opacity: 1;
   transform: translateX(0) scale(1);
+}
+
+#visitBtn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.3);
+  transform: translateX(0) scale(0.95);
+}
+
+#visitBtn:disabled:hover {
+  transform: translateX(0) scale(0.95);
+  filter: grayscale(0.3);
 }
 
 #playAnim {

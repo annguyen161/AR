@@ -4,6 +4,7 @@ const playAnimBtn = document.getElementById("playAnim");
 const bgm = document.getElementById("bgm");
 const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
+const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
@@ -15,8 +16,35 @@ setTimeout(() => {
   }
 }, 1000);
 
-visitBtn.style.display = "none";
-visitBtn.classList.remove("show");
+// Countdown for visit button
+let countdownTime = 10;
+let countdownInterval = null;
+
+function startCountdown() {
+  const btnText = visitBtn.querySelector(".btn-icon");
+  const originalText = btnText.textContent;
+
+  visitBtn.disabled = true;
+  visitBtn.style.opacity = "0.6";
+  visitBtn.style.cursor = "not-allowed";
+
+  countdownInterval = setInterval(() => {
+    btnText.textContent = `Đổi Quà (${countdownTime}s)`;
+    countdownTime--;
+
+    if (countdownTime < 0) {
+      clearInterval(countdownInterval);
+      visitBtn.disabled = false;
+      visitBtn.style.opacity = "1";
+      visitBtn.style.cursor = "pointer";
+      btnText.textContent = originalText;
+    }
+  }, 1000);
+}
+
+visitBtn.style.display = "flex";
+visitBtn.classList.add("show");
+startCountdown();
 
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
