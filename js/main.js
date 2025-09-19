@@ -10,6 +10,122 @@ const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 let firstAnim = null;
 let arActivated = false;
 
+// Function to check AR support
+function checkARSupport() {
+  // Check for WebXR support
+  if ("xr" in navigator) {
+    return navigator.xr
+      .isSessionSupported("immersive-ar")
+      .then((supported) => {
+        return supported;
+      })
+      .catch(() => {
+        return false;
+      });
+  }
+
+  // Check for iOS AR Quick Look support
+  if (isIOS) {
+    return new Promise((resolve) => {
+      // iOS devices with iOS 12+ support AR Quick Look
+      const iOSVersion = navigator.userAgent.match(/OS (\d+)_/);
+      if (iOSVersion && parseInt(iOSVersion[1]) >= 12) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  }
+
+  // Check for Android ARCore support
+  if (/Android/i.test(navigator.userAgent)) {
+    return new Promise((resolve) => {
+      // Basic Android AR support check
+      resolve(true);
+    });
+  }
+
+  // Default to false for unsupported devices
+  return Promise.resolve(false);
+}
+
+// Function to show AR not supported message
+function showARNotSupportedMessage() {
+  // Create modal overlay
+  const modal = document.createElement("div");
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    font-family: 'Nunito', sans-serif;
+  `;
+
+  // Create modal content
+  const modalContent = document.createElement("div");
+  modalContent.style.cssText = `
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 350px;
+    margin: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  `;
+
+  // Create message
+  const message = document.createElement("div");
+  message.style.cssText = `
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  `;
+  message.textContent = "Thiết bị của bạn không hỗ trợ AR";
+
+  // Create close button
+  const closeBtn = document.createElement("button");
+  closeBtn.style.cssText = `
+    background: #FF6B6B;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  `;
+  closeBtn.textContent = "Đóng";
+  closeBtn.onmouseover = () => (closeBtn.style.background = "#FF5252");
+  closeBtn.onmouseout = () => (closeBtn.style.background = "#FF6B6B");
+
+  // Add click handler to close modal
+  closeBtn.addEventListener("click", () => {
+    document.body.removeChild(modal);
+  });
+
+  // Add click handler to close modal when clicking overlay
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      document.body.removeChild(modal);
+    }
+  });
+
+  // Assemble modal
+  modalContent.appendChild(message);
+  modalContent.appendChild(closeBtn);
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+}
+
 setTimeout(() => {
   if (typeof textBanner !== "undefined" && textBanner) {
     textBanner.classList.add("show");
@@ -48,11 +164,22 @@ startCountdown();
 
 customAR.addEventListener("click", async (event) => {
   event.preventDefault();
+
+  // Check AR support before activating
   try {
+    const isARSupported = await checkARSupport();
+
+    if (!isARSupported) {
+      showARNotSupportedMessage();
+      return;
+    }
+
     await mv.activateAR();
     arActivated = true;
   } catch (err) {
     console.error("Kích hoạt AR thất bại:", err);
+    // Show error message if AR activation fails
+    showARNotSupportedMessage();
   }
 
   if (isIOS && bgm.paused) {
