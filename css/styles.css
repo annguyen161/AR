@@ -638,7 +638,14 @@ select {
   }
 
   .banner-text {
-    font-size: 14px;
+    font-size: 15px;
+    padding: 12px 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .banner-text {
+    font-size: 12px;
     padding: 12px 10px;
   }
 }
