@@ -49,6 +49,18 @@ function checkARSupport() {
   return Promise.resolve(false);
 }
 
+// Function to update banner text after AR session
+function updateBannerTextAfterAR() {
+  const bannerText = document.querySelector(".banner-text");
+  if (bannerText) {
+    bannerText.innerHTML = `
+      Mẹ khám phá TRỌN VẸN 9 THÁNG trưởng thành của con tại 
+      <a href="https://store.epicgames.com/vi" target="_blank" style="color: #FF6B6B; text-decoration: none; font-weight: 600;">"đường link"</a> 
+      đổi quà nhé
+    `;
+  }
+}
+
 // Function to show AR not supported message
 function showARNotSupportedMessage() {
   // Create modal overlay
@@ -225,6 +237,8 @@ mv.addEventListener("load", () => {
       bgm.currentTime = 0;
       mv.cameraOrbit = "45deg 90deg 2m";
       showVisitButton();
+      // Update banner text after AR session ends
+      updateBannerTextAfterAR();
     }
   });
 
