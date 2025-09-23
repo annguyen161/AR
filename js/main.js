@@ -6,6 +6,7 @@ const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
 const textBanner = document.querySelector(".text-banner");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isAndroid = /Android/i.test(navigator.userAgent);
 
 let firstAnim = null;
 let arActivated = false;
@@ -275,6 +276,12 @@ mv.addEventListener("load", () => {
   mv.addEventListener("ar-status", (event) => {
     console.log("AR status:", event.detail.status);
     if (event.detail.status === "session-started") {
+      // Điều chỉnh scale cho Android khi AR session bắt đầu
+      if (isAndroid) {
+        mv.setAttribute("scale", "0.15 0.15 0.15"); // Tăng scale cho Android trong AR
+        console.log("Đã điều chỉnh scale cho Android trong AR mode");
+      }
+
       // Start animation automatically when AR session starts
       if (firstAnim) {
         mv.animationName = firstAnim;
@@ -286,6 +293,12 @@ mv.addEventListener("load", () => {
       bgm.currentTime = 0;
       bgm.play().catch((err) => console.error("Không phát được nhạc:", err));
     } else if (event.detail.status === "not-presenting") {
+      // Reset scale về mặc định khi thoát AR
+      if (isAndroid) {
+        mv.setAttribute("scale", "0.05 0.05 0.05"); // Reset về scale mặc định
+        console.log("Đã reset scale về mặc định khi thoát AR");
+      }
+
       bgm.pause();
       bgm.currentTime = 0;
       mv.cameraOrbit = "45deg 90deg 2m";
