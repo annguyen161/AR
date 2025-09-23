@@ -275,6 +275,14 @@ mv.addEventListener("load", () => {
   mv.addEventListener("ar-status", (event) => {
     console.log("AR status:", event.detail.status);
     if (event.detail.status === "session-started") {
+      // Start animation automatically when AR session starts
+      if (firstAnim) {
+        mv.animationName = firstAnim;
+        mv.animationLoop = false;
+        mv.currentTime = 0;
+        mv.play();
+      }
+
       bgm.currentTime = 0;
       bgm.play().catch((err) => console.error("Không phát được nhạc:", err));
     } else if (event.detail.status === "not-presenting") {
