@@ -10,6 +10,47 @@ const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 let firstAnim = null;
 let arActivated = false;
 
+// Function to get URL parameters
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+// Function to get current month from URL or default to 1
+function getCurrentMonth() {
+  const month = getUrlParameter("month");
+  return month ? parseInt(month) : 1;
+}
+
+// Function to update model and audio based on month
+function updateContentForMonth(month) {
+  // Update model source
+  const modelSrc = `module/source/month${month}/baby${month}.glb`;
+  const iosSrc = `module/source/month${month}/baby${month}.usdz`;
+
+  mv.setAttribute("src", modelSrc);
+  mv.setAttribute("ios-src", iosSrc);
+  mv.setAttribute("alt", `BABY${month}M`);
+
+  // Update audio source
+  const audioSrc = `module/source/month${month}/voice bé ${month}.MP3`;
+  bgm.setAttribute("src", audioSrc);
+
+  // Update banner text
+  updateBannerTextForMonth(month);
+}
+
+// Function to update banner text for specific month
+function updateBannerTextForMonth(month) {
+  const bannerText = document.querySelector(".banner-text");
+  if (bannerText) {
+    bannerText.innerHTML = `
+      Lắng nghe "Lời thì thầm từ con" <br />
+      tháng ${month}
+    `;
+  }
+}
+
 // Function to check AR support
 function checkARSupport() {
   // Check for WebXR support
@@ -136,6 +177,12 @@ function updateBannerText() {
   }
 }
 
+// Initialize content based on URL parameter
+document.addEventListener("DOMContentLoaded", function () {
+  const currentMonth = getCurrentMonth();
+  updateContentForMonth(currentMonth);
+});
+
 setTimeout(() => {
   if (typeof textBanner !== "undefined" && textBanner) {
     textBanner.classList.add("show");
@@ -189,7 +236,6 @@ customAR.addEventListener("click", async (event) => {
     await mv.activateAR();
     arActivated = true;
   } catch (err) {
-    console.error("Kích hoạt AR thất bại:", err);
     // Show error message if AR activation fails
     showARNotSupportedMessage();
   }
@@ -215,7 +261,6 @@ window.addEventListener("pagehide", () => {
 });
 
 mv.addEventListener("load", () => {
-  console.log("Model loaded");
   const animations = mv.availableAnimations;
 
   if (animations && animations.length > 0) {
@@ -236,6 +281,10 @@ mv.addEventListener("load", () => {
       bgm.pause();
       bgm.currentTime = 0;
       mv.cameraOrbit = "45deg 90deg 2m";
+      // Reset play button state when exiting AR
+      isPlaying = false;
+      playAnimBtn.classList.remove("playing");
+      updatePlayButtonIcon();
       showVisitButton();
     }
   });
@@ -251,9 +300,10 @@ function showVisitButton() {
   if (!visitBtn.classList.contains("show")) {
     visitBtn.style.display = "flex";
     visitBtn.classList.add("show");
-    console.log("Visit button shown");
   }
 }
+
+let isPlaying = false;
 
 playAnimBtn.addEventListener("click", () => {
   if (!firstAnim) {
@@ -261,24 +311,53 @@ playAnimBtn.addEventListener("click", () => {
     return;
   }
 
-  mv.animationName = firstAnim;
-  mv.animationLoop = false;
-  mv.currentTime = 0;
-  mv.play();
+  if (!isPlaying) {
+    // Play animation
+    mv.animationName = firstAnim;
+    mv.animationLoop = false;
+    mv.currentTime = 0;
+    mv.play();
+    isPlaying = true;
+    playAnimBtn.classList.add("playing");
+    updatePlayButtonIcon();
 
-  const lockAtEnd = () => {
-    const duration = mv.duration;
-    const currentTime = mv.currentTime;
+    const lockAtEnd = () => {
+      const duration = mv.duration;
+      const currentTime = mv.currentTime;
 
-    if (duration && currentTime >= duration - 0.1) {
-      mv.pause();
-      showVisitButton();
-    } else {
-      requestAnimationFrame(lockAtEnd);
-    }
-  };
-  requestAnimationFrame(lockAtEnd);
+      if (duration && currentTime >= duration - 0.1) {
+        mv.pause();
+        // Don't reset isPlaying here - keep the pause icon
+        showVisitButton();
+      } else {
+        requestAnimationFrame(lockAtEnd);
+      }
+    };
+    requestAnimationFrame(lockAtEnd);
+  } else {
+    // Pause animation
+    mv.pause();
+    isPlaying = false;
+    playAnimBtn.classList.remove("playing");
+    updatePlayButtonIcon();
+  }
 });
+
+function updatePlayButtonIcon() {
+  const svg = playAnimBtn.querySelector("svg");
+
+  if (!svg) {
+    return;
+  }
+
+  if (isPlaying) {
+    // Show pause icon
+    svg.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+  } else {
+    // Show play icon
+    svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+  }
+}
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && arActivated) {

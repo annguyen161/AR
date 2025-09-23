@@ -836,6 +836,17 @@ model-viewer {
     font-size: 12px;
     min-width: 80px;
   }
+
+  #playAnim {
+    bottom: 100px;
+    width: 50px;
+    height: 50px;
+  }
+
+  #playAnim svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 #visitBtn.show {
@@ -857,27 +868,85 @@ model-viewer {
 
 #playAnim {
   position: absolute;
-  bottom: 100px;
-  right: 20px;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
   width: 60px;
   height: 60px;
   border: none;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  background: linear-gradient(135deg, #81c784, #66bb6a);
   color: #fff;
-  font-size: 28px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: none;
   z-index: 20;
-  transition: transform 0.2s ease, filter 0.25s ease;
+  transition: transform 0.2s ease, filter 0.25s ease, background 0.3s ease;
+  opacity: 0;
+  animation: playButtonAppear 1.5s ease-out 2s forwards;
+}
+
+#playAnim svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+}
+
+#playAnim.playing {
+  background: linear-gradient(135deg, #ffab91, #ff8a65);
+}
+
+#playAnim.playing svg {
+  transform: scale(0.9);
 }
 #playAnim:hover {
-  transform: scale(1.1);
+  transform: translateX(-50%) scale(1.1);
   filter: brightness(1.2);
 }
 #playAnim:active {
-  transform: scale(0.9);
+  transform: translateX(-50%) scale(0.9);
+}
+
+/* Play Button Animations */
+@keyframes playButtonAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(30px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes playButtonFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+@keyframes playButtonGlow {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: none;
+  }
+}
+
+@keyframes playButtonGlowRed {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: none;
+  }
 }
