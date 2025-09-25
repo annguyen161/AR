@@ -74,7 +74,7 @@ function updateContentForMonth(month) {
   mv.setAttribute("alt", `BABY${month}M`);
 
   // Update audio source with lazy loading
-  const audioSrc = `module/source/month${month}/voice bé ${month}.MP3`;
+  const audioSrc = `module/source/month${month}/voice${month}.MP3`;
   bgm.setAttribute("src", audioSrc);
 
   // Preload audio in background
@@ -351,14 +351,29 @@ customAR.addEventListener("click", async (event) => {
   }
 
   if (isIOS && bgm.paused) {
+    bgm.pause();
     bgm.currentTime = 0;
     // Load audio if not already loaded
     if (!isAudioLoaded) {
       bgm.load();
+      bgm.addEventListener(
+        "canplaythrough",
+        () => {
+          bgm
+            .play()
+            .catch((err) =>
+              console.error("Không phát được nhạc trên iOS:", err)
+            );
+        },
+        { once: true }
+      );
+    } else {
+      setTimeout(() => {
+        bgm
+          .play()
+          .catch((err) => console.error("Không phát được nhạc trên iOS:", err));
+      }, 100);
     }
-    bgm
-      .play()
-      .catch((err) => console.error("Không phát được nhạc trên iOS:", err));
   }
 });
 
@@ -403,12 +418,27 @@ mv.addEventListener("load", () => {
         mv.play();
       }
 
+      bgm.pause();
       bgm.currentTime = 0;
       // Load audio if not already loaded
       if (!isAudioLoaded) {
         bgm.load();
+        bgm.addEventListener(
+          "canplaythrough",
+          () => {
+            bgm
+              .play()
+              .catch((err) => console.error("Không phát được nhạc:", err));
+          },
+          { once: true }
+        );
+      } else {
+        setTimeout(() => {
+          bgm
+            .play()
+            .catch((err) => console.error("Không phát được nhạc:", err));
+        }, 100);
       }
-      bgm.play().catch((err) => console.error("Không phát được nhạc:", err));
     } else if (event.detail.status === "not-presenting") {
       bgm.pause();
       bgm.currentTime = 0;
@@ -460,12 +490,44 @@ playAnimBtn.addEventListener("click", () => {
     playAnimBtn.classList.add("playing");
     updatePlayButtonIcon();
 
+    // Play music when animation starts
+    if (bgm.src) {
+      // Stop any current audio operations
+      bgm.pause();
+      bgm.currentTime = 0;
+
+      // Load audio if not already loaded
+      if (!isAudioLoaded) {
+        bgm.load();
+        // Wait for audio to be ready before playing
+        bgm.addEventListener(
+          "canplaythrough",
+          () => {
+            bgm
+              .play()
+              .catch((err) => console.error("Không phát được nhạc:", err));
+          },
+          { once: true }
+        );
+      } else {
+        // If already loaded, play immediately
+        setTimeout(() => {
+          bgm
+            .play()
+            .catch((err) => console.error("Không phát được nhạc:", err));
+        }, 100);
+      }
+    }
+
     const lockAtEnd = () => {
       const duration = mv.duration;
       const currentTime = mv.currentTime;
 
       if (duration && currentTime >= duration - 0.1) {
         mv.pause();
+        // Pause music when animation ends
+        bgm.pause();
+        bgm.currentTime = 0;
         // Don't reset isPlaying here - keep the pause icon
         showVisitButton();
       } else {
@@ -476,6 +538,8 @@ playAnimBtn.addEventListener("click", () => {
   } else {
     // Pause animation
     mv.pause();
+    // Pause music when animation is paused
+    bgm.pause();
     isPlaying = false;
     playAnimBtn.classList.remove("playing");
     updatePlayButtonIcon();
