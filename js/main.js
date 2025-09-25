@@ -432,7 +432,7 @@ mv.addEventListener("load", () => {
   setTimeout(() => {
     btnGroup.classList.remove("loading");
     btnGroup.classList.add("show");
-  }, 1000);
+  }, 500);
 });
 
 function showVisitButton() {
