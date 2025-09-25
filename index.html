@@ -14,7 +14,7 @@
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
-    <!-- Preload critical fonts -->
+    <!-- Preload critical fonts with lazy loading -->
     <link
       rel="preload"
       href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
@@ -26,6 +26,10 @@
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
     /></noscript>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="js/main.js" as="script" />
+    <link rel="preload" href="css/styles.css" as="style" />
     <link rel="stylesheet" href="css/styles.css?v=2" />
   </head>
 
@@ -258,6 +262,12 @@
       </div>
     </div>
 
+    <!-- Loading indicator for 3D model -->
+    <div id="model-loading" class="model-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Đang tải mô hình 3D...</div>
+    </div>
+
     <model-viewer
       id="mv"
       src=""
@@ -271,6 +281,9 @@
       camera-controls
       camera-orbit="45deg 90deg 10m"
       touch-action="pan-x pan-y"
+      loading="lazy"
+      reveal="auto"
+      style="opacity: 0; transition: opacity 0.5s ease"
     >
     </model-viewer>
 
@@ -294,7 +307,7 @@
       </svg>
     </button>
 
-    <audio id="bgm" src="" preload="auto" loop></audio>
+    <audio id="bgm" src="" preload="none" loop loading="lazy"></audio>
 
     <script src="js/main.js"></script>
   </body>

@@ -5,10 +5,13 @@ const bgm = document.getElementById("bgm");
 const btnGroup = document.getElementById("btnGroup");
 const visitBtn = document.getElementById("visitBtn");
 const textBanner = document.querySelector(".text-banner");
+const modelLoading = document.getElementById("model-loading");
 const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 let firstAnim = null;
 let arActivated = false;
+let isModelLoaded = false;
+let isAudioLoaded = false;
 
 // Function to get URL parameters
 function getUrlParameter(name) {
@@ -22,8 +25,46 @@ function getCurrentMonth() {
   return month ? parseInt(month) : 1;
 }
 
+// Lazy loading functions
+function loadFloatingElements() {
+  const floatingElements = document.querySelectorAll(".floating-element");
+  floatingElements.forEach((element, index) => {
+    setTimeout(() => {
+      element.classList.add("lazy-loaded");
+    }, index * 100);
+  });
+}
+
+function preloadAudio(audioSrc) {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio();
+    audio.preload = "metadata";
+    audio.oncanplaythrough = () => {
+      isAudioLoaded = true;
+      resolve();
+    };
+    audio.onerror = () => reject();
+    audio.src = audioSrc;
+  });
+}
+
+function showModelLoading() {
+  if (modelLoading) {
+    modelLoading.style.display = "block";
+  }
+}
+
+function hideModelLoading() {
+  if (modelLoading) {
+    modelLoading.style.display = "none";
+  }
+}
+
 // Function to update model and audio based on month
 function updateContentForMonth(month) {
+  // Show loading indicator
+  showModelLoading();
+
   // Update model source
   const modelSrc = `module/source/month${month}/baby${month}.glb`;
   const iosSrc = `module/source/month${month}/baby${month}.usdz`;
@@ -32,9 +73,14 @@ function updateContentForMonth(month) {
   mv.setAttribute("ios-src", iosSrc);
   mv.setAttribute("alt", `BABY${month}M`);
 
-  // Update audio source
+  // Update audio source with lazy loading
   const audioSrc = `module/source/month${month}/voice bé ${month}.MP3`;
   bgm.setAttribute("src", audioSrc);
+
+  // Preload audio in background
+  preloadAudio(audioSrc).catch(() => {
+    console.log("Audio preload failed, will load on demand");
+  });
 
   // Update banner text
   updateBannerTextForMonth(month);
@@ -177,15 +223,79 @@ function updateBannerText() {
   }
 }
 
+// Intersection Observer for lazy loading
+function setupIntersectionObserver() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("lazy-loaded");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "50px",
+    }
+  );
+
+  // Observe floating elements
+  document.querySelectorAll(".floating-element").forEach((el) => {
+    observer.observe(el);
+  });
+}
+
+// Performance optimization: Debounce scroll events
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Lazy load resources based on user interaction
+function setupLazyResourceLoading() {
+  // Load audio when user first interacts
+  let audioLoaded = false;
+  const loadAudio = () => {
+    if (!audioLoaded && bgm.src) {
+      bgm.load();
+      audioLoaded = true;
+    }
+  };
+
+  // Load audio on first user interaction
+  document.addEventListener("click", loadAudio, { once: true });
+  document.addEventListener("touchstart", loadAudio, { once: true });
+  document.addEventListener("keydown", loadAudio, { once: true });
+}
+
 // Initialize content based on URL parameter
 document.addEventListener("DOMContentLoaded", function () {
   const currentMonth = getCurrentMonth();
   updateContentForMonth(currentMonth);
+
+  // Setup intersection observer for lazy loading
+  setupIntersectionObserver();
+
+  // Setup lazy resource loading
+  setupLazyResourceLoading();
+
+  // Load floating elements with lazy loading
+  setTimeout(() => {
+    loadFloatingElements();
+  }, 500);
 });
 
 setTimeout(() => {
   if (typeof textBanner !== "undefined" && textBanner) {
-    textBanner.classList.add("show");
+    textBanner.classList.add("show", "lazy-loaded");
   }
 }, 1000);
 
@@ -242,6 +352,10 @@ customAR.addEventListener("click", async (event) => {
 
   if (isIOS && bgm.paused) {
     bgm.currentTime = 0;
+    // Load audio if not already loaded
+    if (!isAudioLoaded) {
+      bgm.load();
+    }
     bgm
       .play()
       .catch((err) => console.error("Không phát được nhạc trên iOS:", err));
@@ -262,6 +376,12 @@ window.addEventListener("pagehide", () => {
 
 mv.addEventListener("load", () => {
   const animations = mv.availableAnimations;
+  isModelLoaded = true;
+
+  // Hide loading indicator and show model
+  hideModelLoading();
+  mv.style.opacity = "1";
+  mv.classList.add("loaded");
 
   if (animations && animations.length > 0) {
     firstAnim = animations[0];
@@ -284,6 +404,10 @@ mv.addEventListener("load", () => {
       }
 
       bgm.currentTime = 0;
+      // Load audio if not already loaded
+      if (!isAudioLoaded) {
+        bgm.load();
+      }
       bgm.play().catch((err) => console.error("Không phát được nhạc:", err));
     } else if (event.detail.status === "not-presenting") {
       bgm.pause();
@@ -301,7 +425,14 @@ mv.addEventListener("load", () => {
     mv.setAttribute("ar-status", "not-presenting");
   }
 
-  btnGroup.classList.add("show");
+  // Add skeleton loading to buttons initially
+  btnGroup.classList.add("loading");
+
+  // Remove skeleton loading and show buttons
+  setTimeout(() => {
+    btnGroup.classList.remove("loading");
+    btnGroup.classList.add("show");
+  }, 1000);
 });
 
 function showVisitButton() {
