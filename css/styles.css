@@ -4,15 +4,17 @@ body {
   height: 100%;
   background: #0b0c10;
   color: #fff;
-  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, "Segoe UI",
     Roboto, Arial, sans-serif;
   overflow: hidden;
+  font-display: swap;
 }
 
 /* Apply Playpen Sans font to all text elements */
 * {
-  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, "Segoe UI",
     Roboto, Arial, sans-serif;
+  font-display: swap;
 }
 
 h1,
@@ -30,8 +32,9 @@ label,
 input,
 textarea,
 select {
-  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, "Segoe UI",
     Roboto, Arial, sans-serif;
+  font-display: swap;
 }
 
 /* Animated Background Styles from ar-mhd */
@@ -586,8 +589,9 @@ select {
   color: #c84290;
   font-size: 22px;
   font-weight: 600;
-  font-family: "Playpen Sans", cursive, system-ui, -apple-system, Segoe UI,
+  font-family: "Playpen Sans", cursive, system-ui, -apple-system, "Segoe UI",
     Roboto, Arial, sans-serif;
+  font-display: swap;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -690,6 +694,7 @@ model-viewer {
   border: none;
   border-radius: 16px;
   font-family: "Nunito", "Arial", sans-serif !important;
+  font-display: swap;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
@@ -741,6 +746,7 @@ model-viewer {
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   font-family: "Nunito", "Arial", sans-serif !important;
+  font-display: swap;
   font-weight: 600 !important;
 }
 
@@ -754,6 +760,7 @@ model-viewer {
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   font-family: "Nunito", "Arial", sans-serif !important;
+  font-display: swap;
   font-weight: 600 !important;
 }
 
@@ -767,6 +774,7 @@ model-viewer {
   transform: translateY(1px);
   transition: transform 0.3s ease;
   font-family: "Nunito", "Arial", sans-serif !important;
+  font-display: swap;
   font-weight: 600 !important;
 }
 
